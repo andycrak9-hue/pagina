@@ -1,80 +1,265 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fondos HD | Descargas Gratis</title>
-  <style>
-    :root{
-      --bg:#0f1220;--card:#161a2f;--text:#e7e9ff;--muted:#aab0ff;--accent:#6c7cff;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,Arial;background:linear-gradient(180deg,#0b0e1a,var(--bg));color:var(--text)}
-    header{text-align:center;padding:32px 20px}
-    header h1{margin:0 0 8px;font-size:2rem}
-    header p{margin:0;color:var(--muted)}
-    .container{max-width:1200px;margin:0 auto;padding:20px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-    .card{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-    .thumb{aspect-ratio:16/9}
-    .thumb img{width:100%;height:100%;object-fit:cover}
-    .content{padding:12px}
-    .title{margin:0 0 6px;font-weight:600}
-    .meta{font-size:.85rem;color:var(--muted);margin-bottom:10px}
-    .actions a{display:block;text-align:center;background:var(--accent);color:#0b0e1a;text-decoration:none;padding:8px;border-radius:10px;font-weight:600}
-    footer{text-align:center;color:var(--muted);padding:24px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fondos Premium</title>
+
+<style>
+:root{
+  --bg:#080a16;
+  --panel:#0f1328;
+  --card:#151a3d;
+  --text:#ffffff;
+  --muted:#9aa4ff;
+  --accent:#7c7cff;
+  --glow:0 0 20px rgba(124,124,255,.4);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,Arial;
+  background:radial-gradient(circle at top,#12163b,#060813);
+  color:var(--text);
+}
+
+/* LAYOUT */
+.layout{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+aside{
+  background:linear-gradient(180deg,#0d1130,#080a1f);
+  padding:28px 20px;
+}
+aside h2{
+  margin:0 0 24px;
+  font-size:1.4rem;
+}
+.menu button{
+  width:100%;
+  background:none;
+  border:none;
+  color:var(--text);
+  text-align:left;
+  padding:12px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:500;
+  display:flex;
+  gap:10px;
+}
+.menu button:hover,
+.menu button.active{
+  background:rgba(124,124,255,.15);
+  box-shadow:var(--glow);
+}
+
+/* MAIN */
+main{
+  padding:32px;
+}
+
+/* HEADER */
+.header{
+  margin-bottom:32px;
+}
+.header h1{
+  margin:0;
+  font-size:2.6rem;
+}
+.header p{
+  margin-top:6px;
+  color:var(--muted);
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:22px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(180deg,#1b2050,#12153a);
+  border-radius:22px;
+  overflow:hidden;
+  position:relative;
+  transition:.35s;
+}
+.card:hover{
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:0 20px 60px rgba(0,0,0,.6),var(--glow);
+}
+.thumb{
+  aspect-ratio:16/9;
+  position:relative;
+}
+.thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.content{
+  padding:16px;
+}
+.title{
+  margin:0 0 6px;
+  font-size:1.05rem;
+}
+.meta{
+  color:var(--muted);
+  font-size:.85rem;
+  margin-bottom:12px;
+}
+.actions button{
+  width:100%;
+  background:linear-gradient(135deg,#7c7cff,#5b5bff);
+  color:#080a16;
+  border:none;
+  padding:10px;
+  border-radius:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+.actions button:hover{
+  filter:brightness(1.1);
+}
+
+/* BADGES */
+.badge{
+  position:absolute;
+  top:14px;
+  left:14px;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(6px);
+  color:#fff;
+  padding:6px 10px;
+  border-radius:10px;
+  font-size:.75rem;
+  font-weight:700;
+  display:flex;
+  gap:6px;
+  align-items:center;
+  box-shadow:0 6px 20px rgba(0,0,0,.4);
+}
+.badge.mobile{
+  background:linear-gradient(135deg,#00d2ff,#3a7bd5);
+}
+.badge.k4{
+  background:linear-gradient(135deg,#ffb347,#ffcc33);
+  color:#080a16;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  aside{display:none}
+}
+</style>
 </head>
+
 <body>
-<header>
-  <h1>Fondos de Pantalla HD</h1>
-  <p>Fondos gratis para escritorio y móvil</p>
-</header>
 
-<main class="container">
-  <section class="grid" id="grid"></section>
-</main>
+<div class="layout">
 
-<footer>
-  © 2026 Fondos HD
-</footer>
+  <!-- SIDEBAR -->
+  <aside>
+    <h2>Explorar</h2>
+    <div class="menu">
+      <button class="active" data-cat="all">✨ Todos</button>
+      <button data-cat="popular">🔥 Lo más visto</button>
+      <button data-cat="desktop">🖥️ Escritorio</button>
+      <button data-cat="mobile">📱 Móvil</button>
+      <button data-cat="4k">🎞️ 4K</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <div class="header">
+      <h1>Fondos Premium</h1>
+      <p>Fondos HD y 4K para escritorio y móvil</p>
+    </div>
+
+    <section class="grid" id="grid"></section>
+  </main>
+
+</div>
 
 <script>
-// FONDOS FIJOS
-const fixedWallpapers=[
-  {
-    title:'Montañas al Amanecer',
-    res:'3840×2160',
-    category:'desktop 4k',
-    image:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200',
-    download:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=100&w=3840'
-  }
-];
+// =====================
+// LIMPIAR FONDOS INVÁLIDOS
+// =====================
+(function clean(){
+  const f = JSON.parse(localStorage.getItem("fondos") || "[]")
+    .filter(x => x && typeof x.image === "string" && x.image.trim());
+  localStorage.setItem("fondos", JSON.stringify(f));
+})();
 
-// FONDOS DEL ADMIN
-const adminWallpapers=JSON.parse(localStorage.getItem('fondos')||'[]');
+// =====================
+// DATOS
+// =====================
+const wallpapers = JSON.parse(localStorage.getItem("fondos") || "[]");
+const grid = document.getElementById("grid");
 
-const allWallpapers=[...fixedWallpapers,...adminWallpapers];
-const grid=document.getElementById('grid');
-
-function render(){
-  grid.innerHTML='';
-  allWallpapers.forEach(w=>{
-    const card=document.createElement('article');
-    card.className='card';
-    card.innerHTML=`
-      <div class="thumb"><img src="${w.image}"></div>
+// =====================
+// RENDER
+// =====================
+function render(list){
+  grid.innerHTML = "";
+  list.forEach(w=>{
+    const card = document.createElement("article");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="thumb">
+        ${w.category?.includes("mobile") ? `<div class="badge mobile">📱 Móvil</div>` : ""}
+        ${w.category?.includes("4k") ? `<div class="badge k4">🎞️ 4K</div>` : ""}
+        <img src="${w.image}" alt="">
+      </div>
       <div class="content">
-        <h3 class="title">${w.title}</h3>
-        <div class="meta">${w.res}</div>
+        <h3 class="title">${w.title || "Wallpaper"}</h3>
+        <div class="meta">${w.res || ""}</div>
         <div class="actions">
-          <a href="${w.download||w.image}" download>Descargar</a>
+          <button class="download-btn" data-url="${w.download || w.image}">
+            Descargar
+          </button>
         </div>
-      </div>`;
+      </div>
+    `;
     grid.appendChild(card);
   });
 }
-render();
+render(wallpapers);
+
+// =====================
+// FILTROS
+// =====================
+document.querySelectorAll(".menu button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".menu button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const cat = btn.dataset.cat;
+    if(cat === "all") render(wallpapers);
+    else if(cat === "popular") render(wallpapers.slice(0,6));
+    else render(wallpapers.filter(w => (w.category||"").includes(cat)));
+  });
+});
+
+// =====================
+// DESCARGA (NUEVA PESTAÑA)
+// =====================
+document.addEventListener("click", e=>{
+  const btn = e.target.closest(".download-btn");
+  if(!btn) return;
+  window.open(btn.dataset.url, "_blank");
+});
 </script>
+
 </body>
 </html>

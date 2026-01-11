@@ -1,90 +1,151 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel Admin | Fondos</title>
-  <style>
-    body{
-      margin:0;font-family:system-ui,Arial;background:#0f1220;color:#e7e9ff;
-      min-height:100vh;display:grid;place-items:center
-    }
-    .panel{
-      width:100%;max-width:480px;background:#161a2f;padding:24px;border-radius:16px;
-      box-shadow:0 20px 40px rgba(0,0,0,.4)
-    }
-    h1,h2{margin-top:0}
-    label{display:block;margin-top:12px;font-size:.9rem}
-    input,select,button{
-      width:100%;margin-top:6px;padding:10px;border-radius:10px;border:none;font-size:1rem
-    }
-    input,select{background:#0b0f2a;color:#fff}
-    button{background:#6c7cff;color:#0b0e1a;font-weight:bold;cursor:pointer;margin-top:16px}
-    .list{margin-top:20px}
-    .item{display:flex;justify-content:space-between;align-items:center;margin:6px 0}
-    .item button{width:auto;padding:6px 10px;margin:0 4px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Admin</title>
+
+<style>
+body{
+  margin:0;font-family:system-ui,Arial;
+  background:#0f1220;color:#e7e9ff;
+  display:grid;place-items:center;min-height:100vh
+}
+.panel{
+  width:100%;max-width:440px;
+  background:#161a2f;padding:24px;
+  border-radius:16px
+}
+label{display:block;margin-top:12px}
+input,select,button{
+  width:100%;margin-top:6px;
+  padding:10px;border-radius:10px;border:none
+}
+input,select{background:#0b0f2a;color:#fff}
+button{background:#6c7cff;font-weight:bold;cursor:pointer}
+.item{
+  display:flex;justify-content:space-between;
+  align-items:center;margin-top:8px
+}
+.item button{width:auto;padding:4px 8px}
+</style>
 </head>
 <body>
-  <div class="panel">
-    <h1>Panel Admin</h1>
 
-    <label>Título</label>
-    <input id="title" />
+<div class="panel">
+  <h2>Panel Admin</h2>
 
-    <label>Resolución</label>
-    <input id="res" />
+  <label>Título</label>
+  <input id="title">
 
-    <label>Categoría</label>
-    <select id="category">
-      <option value="desktop">Escritorio</option>
-      <option value="mobile">Móvil</option>
-      <option value="4k">4K</option>
-    </select>
+  <label>Resolución</label>
+  <input id="res">
 
-    <label>Imagen (URL)</label>
-    <input id="image" />
+  <label>Categoría</label>
+  <select id="category">
+    <option value="desktop">Escritorio</option>
+    <option value="mobile">Móvil</option>
+    <option value="4k">4K</option>
+  </select>
 
-    <button onclick="save()">Guardar fondo</button>
+  <label>Imagen (preview)</label>
+  <input id="image" placeholder="https://imagen-preview.jpg">
 
-    <div class="list" id="list"></div>
-  </div>
+  <label>Link de descarga (archivo real)</label>
+  <input id="download" placeholder="https://archivo-final.jpg">
+
+  <button onclick="save()">Guardar fondo</button>
+
+  <div id="list"></div>
+</div>
 
 <script>
-// CONTRASEÑA
-const PASSWORD='admin123';
-if(sessionStorage.getItem('auth')!=='ok'){
-  const pass=prompt('Contraseña del panel:');
-  if(pass!==PASSWORD){alert('Acceso denegado');location.href='/';}
-  else sessionStorage.setItem('auth','ok');
+// 🔐 CONTRASEÑA
+const PASSWORD = "admin123";
+if (sessionStorage.getItem("auth") !== "ok") {
+  const pass = prompt("Contraseña del panel:");
+  if (pass !== PASSWORD) {
+    alert("Acceso denegado");
+    location.href = "/";
+  }
+  sessionStorage.setItem("auth","ok");
 }
 
-let editIndex=null;
+let editIndex = null;
 
-function getFondos(){return JSON.parse(localStorage.getItem('fondos')||'[]');}
-function setFondos(f){localStorage.setItem('fondos',JSON.stringify(f));}
+// UTILIDADES
+function getFondos(){
+  return JSON.parse(localStorage.getItem("fondos") || "[]");
+}
+function setFondos(f){
+  localStorage.setItem("fondos", JSON.stringify(f));
+}
 
+// GUARDAR / EDITAR
 function save(){
-  const fondo={title:title.value,res:res.value,category:category.value,image:image.value};
-  const fondos=getFondos();
-  if(editIndex!==null){fondos[editIndex]=fondo;editIndex=null;}else{fondos.push(fondo);}
-  setFondos(fondos);clearForm();render();
+  const fondo = {
+    title: title.value,
+    res: res.value,
+    category: category.value,
+    image: image.value,
+    download: download.value || image.value
+  };
+
+  const fondos = getFondos();
+  if(editIndex !== null){
+    fondos[editIndex] = fondo;
+    editIndex = null;
+  } else {
+    fondos.push(fondo);
+  }
+
+  setFondos(fondos);
+  clearForm();
+  render();
 }
 
-function edit(i){const f=getFondos()[i];title.value=f.title;res.value=f.res;category.value=f.category;image.value=f.image;editIndex=i;}
-function del(i){if(!confirm('¿Eliminar fondo?'))return;const f=getFondos();f.splice(i,1);setFondos(f);render();}
+// EDITAR
+function edit(i){
+  const f = getFondos()[i];
+  title.value = f.title;
+  res.value = f.res;
+  category.value = f.category;
+  image.value = f.image;
+  download.value = f.download || "";
+  editIndex = i;
+}
 
-function clearForm(){title.value=res.value=image.value='';}
+// ELIMINAR
+function del(i){
+  if(!confirm("¿Eliminar fondo?")) return;
+  const f = getFondos();
+  f.splice(i,1);
+  setFondos(f);
+  render();
+}
 
+function clearForm(){
+  title.value = res.value = image.value = download.value = "";
+}
+
+// LISTADO
 function render(){
-  const list=document.getElementById('list');
-  const fondos=getFondos();
-  list.innerHTML='<h2>Fondos</h2>';
+  const list = document.getElementById("list");
+  const fondos = getFondos();
+  list.innerHTML = "<h3>Fondos</h3>";
   fondos.forEach((f,i)=>{
-    list.innerHTML+=`<div class="item">${f.title}<div><button onclick="edit(${i})">✏️</button><button onclick="del(${i})">🗑️</button></div></div>`;
+    list.innerHTML += `
+      <div class="item">
+        ${f.title}
+        <div>
+          <button onclick="edit(${i})">✏️</button>
+          <button onclick="del(${i})">🗑️</button>
+        </div>
+      </div>`;
   });
 }
 render();
 </script>
+
 </body>
 </html>
